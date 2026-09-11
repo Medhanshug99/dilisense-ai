@@ -1,0 +1,26 @@
+# Web framework (health checks only)
+fastapi==0.115.5
+uvicorn[standard]==0.32.0
+
+# Queue - must match bullmq-node 6.3.4 (uses shared Lua scripts)
+bullmq==2.24.0
+
+# Postgres
+psycopg[binary,pool]==3.2.3
+
+# PDF extraction (PyMuPDF = fitz)
+PyMuPDF==1.25.2
+
+# Embeddings
+sentence-transformers==3.3.1
+torch==2.5.1
+
+# Tokenization (bge-large-en-v1.5 uses BERT tokenizer, but tiktoken works for counting
+# after the sentence; using the model's own tokenizer for accuracy)
+transformers==4.47.1
+tokenizers==0.21.0
+
+# HTTP client for downloading remote sources (future use)
+httpx==0.28.0
+pydantic==2.10.2
+pydantic-settings==2.6.1

@@ -1,0 +1,16 @@
+# Web framework
+fastapi==0.115.5
+uvicorn[standard]==0.32.0
+
+# Postgres
+psycopg[binary,pool]==3.2.3
+
+# Embeddings + reranker
+sentence-transformers==3.3.1
+torch==2.5.1
+transformers==4.47.1
+tokenizers==0.21.0
+
+# Validation
+pydantic==2.10.2
+pydantic-settings==2.6.1
