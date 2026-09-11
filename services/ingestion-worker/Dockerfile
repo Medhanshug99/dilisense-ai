@@ -8,7 +8,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --timeout=100 --retries=5 -r requirements.txt
 
 # Pre-download the embedding model during build so it's baked into the image
 RUN python -c "from sentence_transformers import SentenceTransformer; \
