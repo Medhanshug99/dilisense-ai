@@ -1,7 +1,7 @@
 FROM node:22-alpine
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm ci --production
+RUN npm ci --include=optional
 COPY . .
 RUN npm install --only=dev && npm run build
 EXPOSE 3000

@@ -8,10 +8,11 @@
     "dev": "ts-node-dev --respawn src/index.ts"
   },
   "dependencies": {
-    "express": "^4.21.0",
-    "pg": "^8.15.0",
     "bullmq": "6.3.4",
+    "express": "^4.21.0",
+    "ioredis": "^6.0.0",
     "multer": "^1.4.5-lts.1",
+    "pg": "^8.15.0",
     "zod": "^3.24.0"
   },
   "devDependencies": {
@@ -19,7 +20,7 @@
     "@types/multer": "^1.4.12",
     "@types/node": "^22.10.0",
     "@types/pg": "^8.11.2",
-    "typescript": "^5.7.0",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.7.0"
   }
 }

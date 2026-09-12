@@ -99,8 +99,10 @@ def run_worker():
         settings.queue_name,
         process_job,
         {
-            "host": settings.redis_host,
-            "port": settings.redis_port,
+            "connection": {
+                "host": settings.redis_host,
+                "port": settings.redis_port,
+            }
         },
     )
     worker.on("completed", lambda job, result: log.info(f"job {job.id} completed: {result}"))

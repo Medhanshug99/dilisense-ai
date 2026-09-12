@@ -57,10 +57,8 @@ def startup():
 
 async def _run():
     worker = run_worker()
-    # Keep worker alive — run_forever is blocking
-    import time
-    while True:
-        time.sleep(3600)
+    # Keep worker alive — worker.run() starts job processing and blocks until closed
+    await worker.run()
 
 
 if __name__ == "__main__":
