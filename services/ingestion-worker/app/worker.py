@@ -21,7 +21,7 @@ chunker = BPEChunker()
 embedder = Embedder()
 
 
-async def process_job(job: Job) -> dict:
+async def process_job(job: Job, token: str = None) -> dict:
     """
     job.data is the dict the Node producer pushed: { document_id, storage_path }
     """
