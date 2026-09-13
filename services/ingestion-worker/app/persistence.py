@@ -10,7 +10,7 @@ from .db import get_conn
 
 async def mark_document_status(document_id: str, status: str, error_msg: str = None) -> None:
     with get_conn() as conn:
-        await conn.execute(
+        conn.execute(
             "UPDATE documents SET status = %s, error_msg = %s, updated_at = NOW() WHERE id = %s",
             (status, error_msg, document_id),
         )
@@ -29,7 +29,7 @@ async def insert_chunks(
     with get_conn() as conn:
         # Parents
         for p in parents:
-            await conn.execute(
+            conn.execute(
                 """
                 INSERT INTO chunks (id, document_id, chunk_index, chunk_level,
                                     page_number, bounding_box, text)
@@ -43,7 +43,7 @@ async def insert_chunks(
         for i, child in enumerate(children):
             vec = vectors[i] if i < len(vectors) else None
             vec_str = "[" + ",".join(str(x) for x in vec) + "]" if vec else None
-            await conn.execute(
+            conn.execute(
                 """
                 INSERT INTO chunks (id, document_id, chunk_index, chunk_level,
                                     parent_chunk_id, page_number, bounding_box, text, embedding)
