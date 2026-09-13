@@ -9,7 +9,7 @@ from .db import get_conn
 
 
 async def mark_document_status(document_id: str, status: str, error_msg: str = None) -> None:
-    async with get_conn() as conn:
+    with get_conn() as conn:
         await conn.execute(
             "UPDATE documents SET status = %s, error_msg = %s, updated_at = NOW() WHERE id = %s",
             (status, error_msg, document_id),
@@ -26,7 +26,7 @@ async def insert_chunks(
     Insert parents first (children FK to them via parent_chunk_id),
     then children with embeddings.
     """
-    async with get_conn() as conn:
+    with get_conn() as conn:
         # Parents
         for p in parents:
             await conn.execute(
