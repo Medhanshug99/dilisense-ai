@@ -19,6 +19,9 @@ services:
 
   redis:
     image: redis:7-alpine
+    command: redis-server --appendonly yes
+    volumes:
+      - redisdata:/data
     ports:
       - "6380:6379"
 
@@ -35,6 +38,9 @@ services:
       DB_USER: diligence
       DB_PASSWORD: ${DB_PASSWORD:-diligence_secret}
       REDIS_URL: redis://redis:6379
+      STORAGE_DIR: /app/storage/raw
+    volumes:
+      - storagedata:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
@@ -52,6 +58,9 @@ services:
       DB_USER: diligence
       DB_PASSWORD: ${DB_PASSWORD:-diligence_secret}
       REDIS_URL: redis://redis:6379
+      STORAGE_DIR: /app/storage/raw
+    volumes:
+      - storagedata:/app/storage
     depends_on:
       postgres:
         condition: service_healthy
@@ -78,3 +87,5 @@ services:
 
 volumes:
   pgdata:
+  redisdata:
+  storagedata:
