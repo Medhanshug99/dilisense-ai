@@ -102,7 +102,8 @@ def run_worker():
             "connection": {
                 "host": settings.redis_host,
                 "port": settings.redis_port,
-            }
+            },
+            "lockDuration": 120000,
         },
     )
     worker.on("completed", lambda job, result: log.info(f"job {job.id} completed: {result}"))

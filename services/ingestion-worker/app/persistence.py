@@ -26,7 +26,14 @@ async def insert_chunks(
     Insert parents first (children FK to them via parent_chunk_id),
     then children with embeddings.
     """
+    # Idempotency defense: delete any pre-existing chunks for this document
+    # so that even if the same job runs twice, stale data from the first run
+    # is cleared and won't accumulate.
     with get_conn() as conn:
+        conn.execute(
+            "DELETE FROM chunks WHERE document_id = %s",
+            (document_id,),
+        )
         # Parents
         for p in parents:
             conn.execute(
