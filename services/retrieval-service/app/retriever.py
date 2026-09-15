@@ -75,7 +75,9 @@ class Retriever:
         else:
             params = (query_vec, query_vec, settings.dense_top_n)
         async with get_conn() as conn:
-            rows = await conn.fetch(sql, *params)
+            async with conn.cursor() as cur:
+                await cur.execute(sql, params)
+                rows = await cur.fetchall()
         return [dict(r) for r in rows]
 
     async def _sparse_search(self, query: str, document_id: str | None):
@@ -86,7 +88,9 @@ class Retriever:
         else:
             params = (query, query, query, settings.sparse_top_n)
         async with get_conn() as conn:
-            rows = await conn.fetch(sql, *params)
+            async with conn.cursor() as cur:
+                await cur.execute(sql, params)
+                rows = await cur.fetchall()
         return [dict(r) for r in rows]
 
     @staticmethod
@@ -133,10 +137,12 @@ class Retriever:
             return
 
         async with get_conn() as conn:
-            rows = await conn.fetch(
-                "SELECT id, text FROM chunks WHERE id = ANY($1::uuid[])",
-                parent_ids,
-            )
+            async with conn.cursor() as cur:
+                await cur.execute(
+                    "SELECT id, text FROM chunks WHERE id = ANY(%s::uuid[])",
+                    (parent_ids,),
+                )
+                rows = await cur.fetchall()
         parents_by_id = {str(r["id"]): r["text"] for r in rows}
 
         for c in chunks:
