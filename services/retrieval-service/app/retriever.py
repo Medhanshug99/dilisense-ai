@@ -10,6 +10,7 @@ Pipeline:
 """
 import asyncio
 import logging
+import psycopg.rows
 from .config import settings
 from .db import get_conn
 from .embedder import Embedder
@@ -71,11 +72,11 @@ class Retriever:
         doc_filter = "AND document_id = %s" if document_id else ""
         sql = DENSE_SQL.format(doc_filter=doc_filter)
         if document_id:
-            params = (query_vec, query_vec, document_id, settings.dense_top_n)
+            params = (query_vec, document_id, query_vec, settings.dense_top_n)
         else:
             params = (query_vec, query_vec, settings.dense_top_n)
         async with get_conn() as conn:
-            async with conn.cursor() as cur:
+            async with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
                 await cur.execute(sql, params)
                 rows = await cur.fetchall()
         return [dict(r) for r in rows]
@@ -84,11 +85,11 @@ class Retriever:
         doc_filter = "AND document_id = %s" if document_id else ""
         sql = SPARSE_SELECT.format(doc_filter=doc_filter)
         if document_id:
-            params = (query, query, query, document_id, settings.sparse_top_n)
+            params = (query, query, document_id, query, settings.sparse_top_n)
         else:
             params = (query, query, query, settings.sparse_top_n)
         async with get_conn() as conn:
-            async with conn.cursor() as cur:
+            async with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
                 await cur.execute(sql, params)
                 rows = await cur.fetchall()
         return [dict(r) for r in rows]
@@ -137,7 +138,7 @@ class Retriever:
             return
 
         async with get_conn() as conn:
-            async with conn.cursor() as cur:
+            async with conn.cursor(row_factory=psycopg.rows.dict_row) as cur:
                 await cur.execute(
                     "SELECT id, text FROM chunks WHERE id = ANY(%s::uuid[])",
                     (parent_ids,),
